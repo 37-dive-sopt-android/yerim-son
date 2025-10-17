@@ -1,174 +1,143 @@
 package com.sopt.dive
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.dive.ui.theme.DiveTheme
-import kotlin.jvm.java
+import androidx.compose.ui.Alignment
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        val id = intent.getStringExtra("id") ?: ""
+        val pw = intent.getStringExtra("pw") ?: ""
+        val nickname = intent.getStringExtra("nickname") ?: ""
+        val mbti = intent.getStringExtra("mbti") ?: ""
+
         setContent {
             DiveTheme {
-                SignInScreen()
+                MainScreen(id = id, pw = pw, nickname = nickname, mbti = mbti)
             }
         }
     }
 }
 
 @Composable
-fun Boxes() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Box(
-            modifier = Modifier
-                .size(150.dp)
-                .background(Color.Red)
-        )
-        Box(
-            modifier = Modifier
-                .size(150.dp)
-                .background(Color.Green)
-        )
-        Box(
-            modifier = Modifier
-                .size(150.dp)
-                .background(Color.Blue)
-        )
-
-    }
-}
-
-@Composable
-fun SignInScreen() {
-    var id by remember { mutableStateOf("") }
-    var pw by remember { mutableStateOf("") }
-    val context = LocalContext.current
-
+fun MainScreen(id: String, pw: String, nickname: String, mbti: String) {
     Column (
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(20.dp),
-       horizontalAlignment = Alignment.CenterHorizontally
+            .padding(20.dp)
     ) {
-        Text(
-            text = "Welcome To Sopt",
-            fontSize = 28.sp,
+        Row (
             modifier = Modifier
-                .padding(top = 20.dp)
-                .padding(bottom = 240.dp)
-                .padding(horizontal = 30.dp),
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_profile),
+                contentDescription = "Profile Image",
+                modifier = Modifier.size(50.dp)
             )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Text(
+                text = "$nickname 님",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(40.dp))
 
         Text(
             text = "ID",
-            fontSize = 16.sp,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 10.dp)
+        )
+        Text(
+            text = id,
+            fontSize = 20.sp,
+            color = Color.Gray,
             modifier = Modifier
-                .align(Alignment.Start)
+        )
 
-        )
-        TextField(
-            value = id,
-            onValueChange = { id = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            placeholder = { Text("사용자 이름 입력") },
-            singleLine = true
-        )
+        Spacer(modifier = Modifier.height(40.dp))
 
         Text(
-            text = "비밀번호",
-            fontSize = 16.sp,
-            modifier = Modifier
-                .align(Alignment.Start)
+            text = "PW",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 10.dp)
         )
-        TextField(
-            value = pw,
-            onValueChange = { pw = it },
+        Text(
+            text = pw,
+            fontSize = 20.sp,
+            color = Color.Gray,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            placeholder = { Text("비밀번호 입력") },
-            singleLine = true
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(40.dp))
 
         Text(
-            text = "회원가입하기",
-            textDecoration = TextDecoration.Underline,
-            modifier = Modifier
-                .clickable(
-                    onClick = {
-                    val intent = Intent(context, SignUpActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
-                    context.startActivity(intent)
-                    }
-                )
+            text = "NICKNAME",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 10.dp)
         )
-        Button(
-            onClick = {},
+        Text(
+            text = nickname,
+            fontSize = 20.sp,
+            color = Color.Gray,
             modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = "로그인 하기",
-                )
-        }
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Text(
+            text = "MBTI",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 10.dp)
+        )
+        Text(
+            text = mbti,
+            fontSize = 20.sp,
+            color = Color.Gray,
+            modifier = Modifier
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun BoxesPreview() {
+fun MainPreview() {
     DiveTheme {
-        Boxes()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SignInPreview() {
-    DiveTheme {
-        SignInScreen()
+        MainScreen("honggill", "dong1234", "홍길동", "ENFP")
     }
 }
