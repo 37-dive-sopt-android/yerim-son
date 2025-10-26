@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,36 +32,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.dive.ui.theme.DiveTheme
+import com.sopt.dive.util.DiveValidator
 
 class LoginActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            DiveTheme {
-                LoginScreen()
-            }
-        }
-    }
-}
-
-@Composable
-fun LoginScreen() {
-    val context = LocalContext.current
-
-    var id by remember { mutableStateOf("") }
-    var pw by remember { mutableStateOf("") }
-
-    // 회원가입 결과로 받은 정보 저장
-    var registeredId by remember { mutableStateOf("") }
-    var registeredPw by remember { mutableStateOf("") }
-    var registeredNickname by remember { mutableStateOf("") }
-    var registeredMbti by remember { mutableStateOf("") }
+    private var registeredId: String = ""
+    private var registeredPw: String = ""
+    private var registeredNickname: String = ""
+    private var registeredMbti: String = ""
 
     // registerForActivityResult로 회원가입 결과 받기
-    val signUpLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == -1) {
+    private val signUpLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+            if (result.resultCode == RESULT_OK) {
                 val data = result.data
                 data?.let {
                     registeredId = it.getStringExtra("id") ?: ""
@@ -70,10 +52,53 @@ fun LoginScreen() {
                     registeredNickname = it.getStringExtra("nickname") ?: ""
                     registeredMbti = it.getStringExtra("mbti") ?: ""
 
-                    Toast.makeText(context, "회원가입에 성공했습니다!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "회원가입에 성공했습니다!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            DiveTheme {
+                LoginScreen(
+                    onSignUpClick = {
+                        val intent = Intent(this, SignUpActivity::class.java)
+                        signUpLauncher.launch(intent)
+                    },
+                    onLoginClick = { id, pw ->
+                        val result = DiveValidator.validateLogin(id, pw)
+                        if (!result.isValid) {
+                            Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
+                        } else if (id == registeredId && pw == registeredPw) {
+                            Toast.makeText(this, "로그인에 성공했습니다!", Toast.LENGTH_SHORT).show()
+
+                                // MainActivity로 이동
+                                val intent = Intent(this, MainActivity::class.java).apply {
+                                    putExtra("id", registeredId)
+                                    putExtra("pw", registeredPw)
+                                    putExtra("nickname", registeredNickname)
+                                    putExtra("mbti", registeredMbti)
+                                }
+                                this.startActivity(intent)
+                        } else {
+                            Toast.makeText(this, "ID 또는 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun LoginScreen(
+    onSignUpClick: () -> Unit,
+    onLoginClick: (String, String) -> Unit
+) {
+    var id by remember { mutableStateOf("") }
+    var pw by remember { mutableStateOf("") }
 
     Column (
         modifier = Modifier
@@ -86,8 +111,7 @@ fun LoginScreen() {
             text = "Welcome To Sopt",
             fontSize = 28.sp,
             modifier = Modifier
-                .padding(top = 20.dp)
-                .padding(bottom = 240.dp)
+                .padding(top = 20.dp, bottom = 240.dp)
                 .padding(horizontal = 30.dp),
         )
 
@@ -130,33 +154,10 @@ fun LoginScreen() {
         Text(
             text = "회원가입하기",
             textDecoration = TextDecoration.Underline,
-            modifier = Modifier.clickable {
-                val intent = Intent(context, SignUpActivity::class.java)
-                signUpLauncher.launch(intent)
-            }
+            modifier = Modifier.clickable { onSignUpClick() }
         )
         Button(
-            onClick = {
-                when {
-                    id.isBlank() || pw.isBlank() ->
-                        Toast.makeText(context, "ID와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
-
-                    id == registeredId && pw == registeredPw -> {
-                        Toast.makeText(context, "로그인에 성공했습니다!", Toast.LENGTH_SHORT).show()
-
-                        // MainActivity로 이동
-                        val intent = Intent(context, MainActivity::class.java).apply {
-                            putExtra("id", registeredId)
-                            putExtra("pw", registeredPw)
-                            putExtra("nickname", registeredNickname)
-                            putExtra("mbti", registeredMbti)
-                        }
-                        context.startActivity(intent)
-                    }
-
-                    else -> Toast.makeText(context, "ID 또는 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
-                }
-            },
+            onClick = { onLoginClick(id, pw) },
             modifier = Modifier
                 .fillMaxWidth()
         ) {
@@ -169,8 +170,11 @@ fun LoginScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun LoginPreview() {
+private fun LoginPreview() {
     DiveTheme {
-        LoginScreen()
+        LoginScreen(
+            onSignUpClick = {},
+            onLoginClick = { _, _ -> }
+        )
     }
 }

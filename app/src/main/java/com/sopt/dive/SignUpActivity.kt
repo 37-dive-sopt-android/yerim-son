@@ -1,6 +1,5 @@
 package com.sopt.dive
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -29,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.dive.ui.theme.DiveTheme
+import com.sopt.dive.util.DiveValidator
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +42,7 @@ class SignUpActivity : ComponentActivity() {
                         putExtra("nickname", nickname)
                         putExtra("mbti", mbti)
                     }
-                    setResult(Activity.RESULT_OK, resultIntent)
+                    setResult(RESULT_OK, resultIntent)
                     finish()
                 }
             }
@@ -145,22 +145,11 @@ fun SignUpScreen(onSignUpSuccess: (String, String, String, String) -> Unit) {
 
         Button(
             onClick = {
-                when {
-                    id.isBlank() || pw.isBlank() || nickname.isBlank() || mbti.isBlank() ->
-                        Toast.makeText(context, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
-
-                    id.length !in 6..10 ->
-                        Toast.makeText(context, "ID는 6~10자 사이여야 합니다.", Toast.LENGTH_SHORT).show()
-
-                    pw.length !in 8..12 ->
-                        Toast.makeText(context, "비밀번호는 8~12자 사이여야 합니다.", Toast.LENGTH_SHORT).show()
-
-                    nickname.trim().isEmpty() ->
-                        Toast.makeText(context, "닉네임은 공백만으로 구성될 수 없습니다.", Toast.LENGTH_SHORT).show()
-
-                    else -> {
-                        onSignUpSuccess(id, pw, nickname, mbti)
-                    }
+                val result = DiveValidator.validateSignUp(id, pw, nickname, mbti)
+                if (!result.isValid) {
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                } else {
+                    onSignUpSuccess(id, pw, nickname, mbti)
                 }
             },
             modifier = Modifier
@@ -175,7 +164,7 @@ fun SignUpScreen(onSignUpSuccess: (String, String, String, String) -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun SignUpScreenPreview() {
+private fun SignUpScreenPreview() {
     DiveTheme {
         SignUpScreen { _, _, _, _ -> }
     }

@@ -136,7 +136,7 @@ fun MainScreen(id: String, pw: String, nickname: String, mbti: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun MainPreview() {
+private fun MainPreview() {
     DiveTheme {
         MainScreen("honggill", "dong1234", "홍길동", "ENFP")
     }
