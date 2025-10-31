@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,16 @@ import com.sopt.dive.R
 import com.sopt.dive.ui.theme.DiveTheme
 
 @Composable
+fun MyRoute() {
+    MyScreen(
+        id = "test12",
+        pw = "12341234",
+        nickname = "안두콩",
+        mbti = "ENFP"
+    )
+}
+
+@Composable
 fun MyScreen(id: String, pw: String, nickname: String, mbti: String) {
     Column (
         modifier = Modifier
@@ -33,6 +44,13 @@ fun MyScreen(id: String, pw: String, nickname: String, mbti: String) {
             .background(Color.White)
             .padding(20.dp)
     ) {
+        Text(
+            text = "My",
+            fontSize = 28.sp,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+        )
+
         Row (
             modifier = Modifier
                 .fillMaxWidth(),
@@ -49,8 +67,7 @@ fun MyScreen(id: String, pw: String, nickname: String, mbti: String) {
 
             Text(
                 text = "$nickname 님",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
             )
         }
 
@@ -58,8 +75,7 @@ fun MyScreen(id: String, pw: String, nickname: String, mbti: String) {
 
         Text(
             text = "ID",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
+            fontSize = 28.sp,
             modifier = Modifier.padding(bottom = 10.dp)
         )
         Text(
@@ -73,8 +89,7 @@ fun MyScreen(id: String, pw: String, nickname: String, mbti: String) {
 
         Text(
             text = "PW",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
+            fontSize = 28.sp,
             modifier = Modifier.padding(bottom = 10.dp)
         )
         Text(
@@ -88,8 +103,7 @@ fun MyScreen(id: String, pw: String, nickname: String, mbti: String) {
 
         Text(
             text = "NICKNAME",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
+            fontSize = 28.sp,
             modifier = Modifier.padding(bottom = 10.dp)
         )
         Text(
@@ -103,8 +117,7 @@ fun MyScreen(id: String, pw: String, nickname: String, mbti: String) {
 
         Text(
             text = "MBTI",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
+            fontSize = 28.sp,
             modifier = Modifier.padding(bottom = 10.dp)
         )
         Text(
