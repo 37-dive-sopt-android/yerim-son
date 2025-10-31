@@ -1,10 +1,6 @@
-package com.sopt.dive
+package com.sopt.dive.signup
 
-import android.content.Intent
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,26 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.dive.ui.theme.DiveTheme
 import com.sopt.dive.util.DiveValidator
-
-class SignUpActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            DiveTheme {
-                SignUpScreen { id, pw, nickname, mbti ->
-                    val resultIntent = Intent().apply {
-                        putExtra("id", id)
-                        putExtra("pw", pw)
-                        putExtra("nickname", nickname)
-                        putExtra("mbti", mbti)
-                    }
-                    setResult(RESULT_OK, resultIntent)
-                    finish()
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun SignUpScreen(onSignUpSuccess: (String, String, String, String) -> Unit) {
