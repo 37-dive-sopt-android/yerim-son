@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sopt.dive.component.DiveBasicButton
 import com.sopt.dive.component.LabeledTextField
 import com.sopt.dive.ui.theme.DiveTheme
 import com.sopt.dive.util.DiveValidator
@@ -81,7 +82,8 @@ fun SignUpScreen(onSignUpSuccess: (String, String, String, String) -> Unit) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Button(
+        DiveBasicButton(
+            text = "회원가입 하기",
             onClick = {
                 val result = DiveValidator.validateSignUp(id, pw, nickname, mbti)
                 if (!result.isValid) {
@@ -91,12 +93,7 @@ fun SignUpScreen(onSignUpSuccess: (String, String, String, String) -> Unit) {
                 }
             },
             modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = "회원가입 하기",
-            )
-        }
+        )
     }
 }
 

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sopt.dive.component.DiveBasicButton
 import com.sopt.dive.component.LabeledTextField
 import com.sopt.dive.ui.theme.DiveTheme
 
@@ -69,15 +71,11 @@ fun LoginScreen(
             textDecoration = TextDecoration.Underline,
             modifier = Modifier.clickable { onSignUpClick() }
         )
-        Button(
+        DiveBasicButton(
+            text = "로그인하기",
             onClick = { onLoginClick(id, pw) },
             modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = "로그인 하기",
-            )
-        }
+        )
     }
 }
 
