@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,11 +17,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sopt.dive.component.DiveLabeledTextField
 import com.sopt.dive.ui.theme.DiveTheme
 
 @Composable
@@ -48,38 +47,19 @@ fun LoginScreen(
                 .padding(horizontal = 30.dp),
         )
 
-        Text(
-            text = "ID",
-            fontSize = 16.sp,
-            modifier = Modifier
-                .align(Alignment.Start)
-
-        )
-        TextField(
+        DiveLabeledTextField(
+            label = "ID",
             value = id,
             onValueChange = { id = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            placeholder = { Text("사용자 이름 입력") },
-            singleLine = true
+            placeholder = "사용자 이름 입력"
         )
 
-        Text(
-            text = "비밀번호",
-            fontSize = 16.sp,
-            modifier = Modifier
-                .align(Alignment.Start)
-        )
-        TextField(
+        DiveLabeledTextField(
+            label = "비밀번호",
             value = pw,
             onValueChange = { pw = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            placeholder = { Text("비밀번호 입력") },
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true
+            placeholder = "비밀번호 입력",
+            isPassword = true
         )
 
         Spacer(modifier = Modifier.weight(1f))
