@@ -19,11 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.dive.R
+import com.sopt.dive.component.LabeledInfoText
 import com.sopt.dive.ui.theme.DiveTheme
 
 @Composable
@@ -83,59 +83,10 @@ fun MyScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        Text(
-            text = "ID",
-            fontSize = 28.sp,
-            modifier = Modifier.padding(bottom = 10.dp)
-        )
-        Text(
-            text = id,
-            fontSize = 20.sp,
-            color = Color.Gray,
-            modifier = Modifier
-        )
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        Text(
-            text = "PW",
-            fontSize = 28.sp,
-            modifier = Modifier.padding(bottom = 10.dp)
-        )
-        Text(
-            text = pw,
-            fontSize = 20.sp,
-            color = Color.Gray,
-            modifier = Modifier
-        )
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        Text(
-            text = "NICKNAME",
-            fontSize = 28.sp,
-            modifier = Modifier.padding(bottom = 10.dp)
-        )
-        Text(
-            text = nickname,
-            fontSize = 20.sp,
-            color = Color.Gray,
-            modifier = Modifier
-        )
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        Text(
-            text = "MBTI",
-            fontSize = 28.sp,
-            modifier = Modifier.padding(bottom = 10.dp)
-        )
-        Text(
-            text = mbti,
-            fontSize = 20.sp,
-            color = Color.Gray,
-            modifier = Modifier
-        )
+        LabeledInfoText(label = "ID", value = id)
+        LabeledInfoText(label = "PW", value = pw)
+        LabeledInfoText(label = "NICKNAME", value = nickname)
+        LabeledInfoText(label = "MBTI", value = mbti)
     }
 }
 
