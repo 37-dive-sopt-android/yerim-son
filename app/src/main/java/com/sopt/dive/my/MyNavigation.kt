@@ -1,5 +1,6 @@
 package com.sopt.dive.my
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -18,8 +19,12 @@ fun NavController.navigateToMy(
         navOptions = navOptions)
 }
 
-fun NavGraphBuilder.myNavGraph() {
+fun NavGraphBuilder.myNavGraph(
+    paddingValues: PaddingValues
+) {
     composable<My> {
-        MyRoute()
+        MyRoute(
+            paddingValues = paddingValues
+        )
     }
 }

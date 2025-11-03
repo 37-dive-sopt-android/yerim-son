@@ -1,5 +1,6 @@
 package com.sopt.dive.home
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -18,8 +19,12 @@ fun NavController.navigateToHome(
         navOptions = navOptions)
 }
 
-fun NavGraphBuilder.homeNavGraph() {
+fun NavGraphBuilder.homeNavGraph(
+    paddingValues: PaddingValues
+) {
     composable<Home> {
-        HomeRoute()
+        HomeRoute(
+            paddingValues = paddingValues
+        )
     }
 }

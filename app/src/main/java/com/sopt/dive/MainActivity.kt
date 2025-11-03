@@ -3,6 +3,7 @@ package com.sopt.dive
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -29,8 +30,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppNavHost(
+fun DiveNavHost(
     navController: NavHostController,
+    paddingValues: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -38,9 +40,9 @@ fun AppNavHost(
         startDestination = MainTab.HOME.route,
         modifier = modifier
     ) {
-        homeNavGraph()
-        searchNavGraph()
-        myNavGraph()
+        homeNavGraph(paddingValues = paddingValues)
+        searchNavGraph(paddingValues = paddingValues)
+        myNavGraph(paddingValues = paddingValues)
     }
 }
 
@@ -71,9 +73,9 @@ fun MainScreen() {
             )
         }
     ) { paddingValues ->
-        AppNavHost(
+        DiveNavHost(
             navController = navController,
-            modifier = Modifier.padding(paddingValues)
+            paddingValues = paddingValues
         )
     }
 }

@@ -17,9 +17,12 @@ import androidx.compose.ui.unit.sp
 import com.sopt.dive.ui.theme.DiveTheme
 
 @Composable
-fun SearchRoute() {
+fun SearchRoute(
+    paddingValues: PaddingValues
+) {
     SearchScreen(
         modifier = Modifier
+            .padding(paddingValues)
     )
 }
 

@@ -1,5 +1,6 @@
 package com.sopt.dive.search
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -18,8 +19,12 @@ fun NavController.navigateToSearch(
         navOptions = navOptions)
 }
 
-fun NavGraphBuilder.searchNavGraph() {
+fun NavGraphBuilder.searchNavGraph(
+    paddingValues: PaddingValues
+) {
     composable<Search> {
-        SearchRoute()
+        SearchRoute(
+            paddingValues = paddingValues
+        )
     }
 }

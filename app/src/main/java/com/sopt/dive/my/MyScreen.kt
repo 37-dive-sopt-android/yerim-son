@@ -27,17 +27,27 @@ import com.sopt.dive.R
 import com.sopt.dive.ui.theme.DiveTheme
 
 @Composable
-fun MyRoute() {
+fun MyRoute(
+    paddingValues: PaddingValues
+) {
     MyScreen(
         id = "test12",
         pw = "12341234",
         nickname = "안두콩",
-        mbti = "ENFP"
+        mbti = "ENFP",
+        modifier = Modifier
+            .padding(paddingValues)
     )
 }
 
 @Composable
-fun MyScreen(id: String, pw: String, nickname: String, mbti: String) {
+fun MyScreen(
+    id: String,
+    pw: String,
+    nickname: String,
+    mbti: String,
+    modifier: Modifier
+) {
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -133,6 +143,6 @@ fun MyScreen(id: String, pw: String, nickname: String, mbti: String) {
 @Composable
 private fun MyPreview() {
     DiveTheme {
-        MyScreen("honggill", "dong1234", "홍길동", "ENFP")
+        MyScreen("honggill", "dong1234", "홍길동", "ENFP", modifier = Modifier)
     }
 }
