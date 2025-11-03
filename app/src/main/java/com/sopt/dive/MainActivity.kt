@@ -67,7 +67,7 @@ fun MainScreen() {
                     navController.navigate(tab.route) {
                         launchSingleTop = true
                         restoreState = true
-                        popUpTo(MainTab.HOME.route) { saveState = true }
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
                     }
                 }
             )
