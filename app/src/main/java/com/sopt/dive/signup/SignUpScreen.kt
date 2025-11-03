@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sopt.dive.component.DiveLabeledTextField
+import com.sopt.dive.component.LabeledTextField
 import com.sopt.dive.ui.theme.DiveTheme
 import com.sopt.dive.util.DiveValidator
 
@@ -50,14 +50,14 @@ fun SignUpScreen(onSignUpSuccess: (String, String, String, String) -> Unit) {
                 .padding(horizontal = 30.dp),
         )
 
-        DiveLabeledTextField(
+        LabeledTextField(
             label = "ID",
             value = id,
             onValueChange = { id = it },
             placeholder = "아이디를 입력해주세요"
         )
 
-        DiveLabeledTextField(
+        LabeledTextField(
             label = "비밀번호",
             value = pw,
             onValueChange = { pw = it },
@@ -65,14 +65,14 @@ fun SignUpScreen(onSignUpSuccess: (String, String, String, String) -> Unit) {
             isPassword = true
         )
 
-        DiveLabeledTextField(
+        LabeledTextField(
             label = "닉네임",
             value = nickname,
             onValueChange = { nickname = it },
             placeholder = "닉네임을 입력해주세요"
         )
 
-        DiveLabeledTextField(
+        LabeledTextField(
             label = "MBTI",
             value = mbti,
             onValueChange = { mbti = it },

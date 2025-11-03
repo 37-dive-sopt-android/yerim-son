@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sopt.dive.component.DiveLabeledTextField
+import com.sopt.dive.component.LabeledTextField
 import com.sopt.dive.ui.theme.DiveTheme
 
 @Composable
@@ -47,14 +47,14 @@ fun LoginScreen(
                 .padding(horizontal = 30.dp),
         )
 
-        DiveLabeledTextField(
+        LabeledTextField(
             label = "ID",
             value = id,
             onValueChange = { id = it },
             placeholder = "사용자 이름 입력"
         )
 
-        DiveLabeledTextField(
+        LabeledTextField(
             label = "비밀번호",
             value = pw,
             onValueChange = { pw = it },

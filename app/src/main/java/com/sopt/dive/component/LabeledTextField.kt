@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.sopt.dive.ui.theme.DiveTheme
 
 @Composable
-fun DiveLabeledTextField(
+fun LabeledTextField(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
@@ -47,12 +47,12 @@ fun DiveLabeledTextField(
 
 @Preview(showBackground = true)
 @Composable
-private fun DiveLabeledTextFieldPreview() {
+private fun LabeledTextFieldPreview() {
     DiveTheme {
         val (text, setText) = remember { mutableStateOf("abcdef") }
 
         Column(modifier = Modifier.fillMaxWidth()) {
-            DiveLabeledTextField(
+            LabeledTextField(
                 label = "ID",
                 value = text,
                 onValueChange = { setText(it) },
