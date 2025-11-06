@@ -1,5 +1,10 @@
 package com.sopt.dive.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
@@ -27,29 +32,36 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun DiveBottomBar(
+    visible: Boolean,
     tabs: List<MainTab>,
     currentTab: MainTab,
     onTabSelected: (MainTab) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .background(color = Color.White)
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+        exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly,
+        Column(
             modifier = Modifier
-                .padding(vertical = 8.dp)
-                .navigationBarsPadding()
-                .fillMaxWidth()
+                .background(color = Color.White)
         ) {
-            tabs.forEach { tab ->
-                key(tab.route) {
-                    DiveBottomBarItem(
-                        tab = tab,
-                        selected = (tab == currentTab),
-                        onClick = { onTabSelected(tab) }
-                    )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .navigationBarsPadding()
+                    .fillMaxWidth()
+            ) {
+                tabs.forEach { tab ->
+                    key(tab.route) {
+                        DiveBottomBarItem(
+                            tab = tab,
+                            selected = (tab == currentTab),
+                            onClick = { onTabSelected(tab) }
+                        )
+                    }
                 }
             }
         }
@@ -88,6 +100,7 @@ private fun BottomBarPreview() {
     DiveTheme {
         Column(modifier = Modifier) {
             DiveBottomBar(
+                visible = true,
                 tabs = MainTab.entries,
                 currentTab = MainTab.HOME,
                 onTabSelected = {}

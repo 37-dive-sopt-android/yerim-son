@@ -18,8 +18,13 @@ fun NavController.navigateToSignUp(
 }
 
 fun NavGraphBuilder.signUpNavGraph(
+    navigateToLogin: () -> Unit
 ) {
     composable<SignUp> {
-
+        SignUpRoute(
+            onSignUpSuccess = { _, _, _, _ ->
+                navigateToLogin()
+            }
+        )
     }
 }

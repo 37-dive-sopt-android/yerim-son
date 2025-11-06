@@ -18,8 +18,13 @@ fun NavController.navigateToLogin(
 }
 
 fun NavGraphBuilder.loginNavGraph(
+    navigateToSignUp: () -> Unit,
+    navigateToHome: (String, String) -> Unit
 ) {
     composable<Login> {
-
+        LoginRoute(
+            onSignUpClick = navigateToSignUp,
+            onLoginClick = navigateToHome
+        )
     }
 }

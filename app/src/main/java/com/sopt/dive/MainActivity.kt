@@ -1,13 +1,19 @@
 package com.sopt.dive
 
+import android.R.id.tabs
+import android.net.http.SslCertificate.restoreState
+import android.net.http.SslCertificate.saveState
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
 import com.sopt.dive.ui.theme.DiveTheme
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -17,6 +23,14 @@ import com.sopt.dive.home.homeNavGraph
 import com.sopt.dive.my.myNavGraph
 import com.sopt.dive.search.searchNavGraph
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
+import com.sopt.dive.home.Home
+import com.sopt.dive.home.navigateToHome
+import com.sopt.dive.login.Login
+import com.sopt.dive.login.loginNavGraph
+import com.sopt.dive.login.navigateToLogin
+import com.sopt.dive.signup.navigateToSignUp
+import com.sopt.dive.signup.signUpNavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,9 +51,24 @@ fun DiveNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = MainTab.HOME.route,
+        startDestination = Login,
         modifier = modifier
     ) {
+        loginNavGraph(
+            navigateToSignUp = navController::navigateToSignUp,
+            navigateToHome = { id, pw ->
+                navController.navigateToHome(
+                    navOptions = navOptions {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                )
+            }
+        )
+        signUpNavGraph(
+            navigateToLogin = navController::navigateToLogin
+        )
         homeNavGraph(paddingValues = paddingValues)
         searchNavGraph(paddingValues = paddingValues)
         myNavGraph(paddingValues = paddingValues)
@@ -53,7 +82,6 @@ fun MainScreen() {
 
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
     val currentRoute = currentDestination?.route ?: MainTab.HOME.route
-
     val currentTab = tabs.find { tab ->
         tab.route == currentRoute
     } ?: MainTab.HOME
@@ -61,6 +89,7 @@ fun MainScreen() {
     Scaffold(
         bottomBar = {
             DiveBottomBar(
+                visible = false,
                 tabs = tabs,
                 currentTab = currentTab,
                 onTabSelected = { tab ->
@@ -75,7 +104,7 @@ fun MainScreen() {
     ) { paddingValues ->
         DiveNavHost(
             navController = navController,
-            paddingValues = paddingValues
+            paddingValues = paddingValues,
         )
     }
 }

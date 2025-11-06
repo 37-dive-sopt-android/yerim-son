@@ -5,10 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,15 +24,27 @@ import com.sopt.dive.component.LabeledTextField
 import com.sopt.dive.ui.theme.DiveTheme
 
 @Composable
-fun LoginScreen(
+fun LoginRoute(
     onSignUpClick: () -> Unit,
     onLoginClick: (String, String) -> Unit
+) {
+    LoginScreen(
+        onSignUpClick = onSignUpClick,
+        onLoginClick = onLoginClick
+    )
+}
+
+@Composable
+fun LoginScreen(
+    onSignUpClick: () -> Unit,
+    onLoginClick: (String, String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var id by remember { mutableStateOf("") }
     var pw by remember { mutableStateOf("") }
 
     Column (
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.White)
             .padding(20.dp),
@@ -44,7 +53,7 @@ fun LoginScreen(
         Text(
             text = "Welcome To Sopt",
             fontSize = 28.sp,
-            modifier = Modifier
+            modifier = modifier
                 .padding(top = 20.dp, bottom = 240.dp)
                 .padding(horizontal = 30.dp),
         )
@@ -64,17 +73,17 @@ fun LoginScreen(
             isPassword = true
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = modifier.weight(1f))
 
         Text(
             text = "회원가입하기",
             textDecoration = TextDecoration.Underline,
-            modifier = Modifier.clickable { onSignUpClick() }
+            modifier = modifier.clickable { onSignUpClick() }
         )
         DiveBasicButton(
             text = "로그인하기",
             onClick = { onLoginClick(id, pw) },
-            modifier = Modifier
+            modifier = modifier
         )
     }
 }

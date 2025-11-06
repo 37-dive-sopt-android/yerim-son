@@ -5,9 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +25,16 @@ import com.sopt.dive.ui.theme.DiveTheme
 import com.sopt.dive.util.DiveValidator
 
 @Composable
-fun SignUpScreen(onSignUpSuccess: (String, String, String, String) -> Unit) {
+fun SignUpRoute(
+    onSignUpSuccess: (String, String, String, String) -> Unit,
+) {
+    SignUpScreen(onSignUpSuccess = onSignUpSuccess)
+}
+
+@Composable
+fun SignUpScreen(
+    onSignUpSuccess: (String, String, String, String) -> Unit,
+    ) {
     val context = LocalContext.current
 
     var id by remember { mutableStateOf("") }

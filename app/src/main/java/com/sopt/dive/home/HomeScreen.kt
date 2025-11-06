@@ -87,7 +87,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun ProfileCard(profile: Profile) {
+private fun ProfileCard(profile: Profile) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
