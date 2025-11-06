@@ -22,9 +22,7 @@ fun NavGraphBuilder.signUpNavGraph(
 ) {
     composable<SignUp> {
         SignUpRoute(
-            onSignUpSuccess = { _, _, _, _ ->
-                navigateToLogin()
-            }
+            onSignUpSuccess = navigateToLogin
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.sopt.dive.login
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,27 +24,53 @@ import androidx.compose.ui.unit.sp
 import com.sopt.dive.component.DiveBasicButton
 import com.sopt.dive.component.LabeledTextField
 import com.sopt.dive.ui.theme.DiveTheme
+import com.sopt.dive.util.DiveValidator
+import com.sopt.dive.util.UserPreferences
 
 @Composable
 fun LoginRoute(
     onSignUpClick: () -> Unit,
-    onLoginClick: (String, String) -> Unit
+    onLoginSuccess: () -> Unit
 ) {
+    var id by remember { mutableStateOf("") }
+    var pw by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val userPrefs = remember { UserPreferences(context) }
+
     LoginScreen(
-        onSignUpClick = onSignUpClick,
-        onLoginClick = onLoginClick
+        id = id,
+        pw = pw,
+        onIdChange = { id = it },
+        onPasswordChange = { pw = it },
+        onTextClick = onSignUpClick,
+        onButtonClick = {
+            val validationResult = DiveValidator.validateLogin(id, pw)
+            if (!validationResult.isValid) {
+                Toast.makeText(context, validationResult.message, Toast.LENGTH_SHORT).show()
+                return@LoginScreen
+            }
+
+            val isValidUser = userPrefs.isUserValid(id, pw)
+            if (isValidUser) {
+                Toast.makeText(context, "로그인에 성공했습니다!", Toast.LENGTH_SHORT).show()
+                onLoginSuccess()
+            } else {
+                Toast.makeText(context, "아이디 또는 비밀번호가 올바르지 않습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
     )
 }
 
 @Composable
 fun LoginScreen(
-    onSignUpClick: () -> Unit,
-    onLoginClick: (String, String) -> Unit,
+    id: String,
+    pw: String,
+    onIdChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onTextClick: () -> Unit,
+    onButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var id by remember { mutableStateOf("") }
-    var pw by remember { mutableStateOf("") }
-
     Column (
         modifier = modifier
             .fillMaxSize()
@@ -61,14 +89,14 @@ fun LoginScreen(
         LabeledTextField(
             label = "ID",
             value = id,
-            onValueChange = { id = it },
+            onValueChange = onIdChange,
             placeholder = "사용자 이름 입력"
         )
 
         LabeledTextField(
             label = "비밀번호",
             value = pw,
-            onValueChange = { pw = it },
+            onValueChange = onPasswordChange,
             placeholder = "비밀번호 입력",
             isPassword = true
         )
@@ -78,11 +106,11 @@ fun LoginScreen(
         Text(
             text = "회원가입하기",
             textDecoration = TextDecoration.Underline,
-            modifier = modifier.clickable { onSignUpClick() }
+            modifier = modifier.clickable { onTextClick() }
         )
         DiveBasicButton(
             text = "로그인하기",
-            onClick = { onLoginClick(id, pw) },
+            onClick = onButtonClick,
             modifier = modifier
         )
     }
@@ -93,8 +121,12 @@ fun LoginScreen(
 private fun LoginPreview() {
     DiveTheme {
         LoginScreen(
-            onSignUpClick = {},
-            onLoginClick = { _, _ -> }
+            id = "testUser",
+            pw = "1234",
+            onIdChange = {},
+            onPasswordChange = {},
+            onTextClick = {},
+            onButtonClick = {}
         )
     }
 }

@@ -1,19 +1,12 @@
 package com.sopt.dive
 
-import android.R.id.tabs
-import android.net.http.SslCertificate.restoreState
-import android.net.http.SslCertificate.saveState
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import com.sopt.dive.ui.theme.DiveTheme
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -24,7 +17,6 @@ import com.sopt.dive.my.myNavGraph
 import com.sopt.dive.search.searchNavGraph
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import com.sopt.dive.home.Home
 import com.sopt.dive.home.navigateToHome
 import com.sopt.dive.login.Login
 import com.sopt.dive.login.loginNavGraph
@@ -56,7 +48,7 @@ fun DiveNavHost(
     ) {
         loginNavGraph(
             navigateToSignUp = navController::navigateToSignUp,
-            navigateToHome = { id, pw ->
+            navigateToHome = {
                 navController.navigateToHome(
                     navOptions = navOptions {
                         popUpTo(navController.graph.startDestinationId) {
