@@ -1,6 +1,7 @@
 package com.sopt.dive
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
@@ -74,24 +75,34 @@ fun MainScreen() {
 
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
     val currentRoute = currentDestination?.route ?: MainTab.HOME.route
-    val currentTab = tabs.find { tab ->
-        tab.route == currentRoute
-    } ?: MainTab.HOME
+    Log.d("MainScreen", "currentRoute = $currentRoute")
+
+    val currentTab = tabs.find { it.route == currentRoute } ?: MainTab.HOME
+
+    val bottomBarRoutes = listOf(
+        MainTab.HOME.route,
+        MainTab.SEARCH.route,
+        MainTab.MYPAGE.route
+    )
+
+    val showBottomBar = bottomBarRoutes.contains(currentRoute)
 
     Scaffold(
         bottomBar = {
-            DiveBottomBar(
-                visible = false,
-                tabs = tabs,
-                currentTab = currentTab,
-                onTabSelected = { tab ->
-                    navController.navigate(tab.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+            if (showBottomBar) {
+                DiveBottomBar(
+                    visible = true,
+                    tabs = tabs,
+                    currentTab = currentTab,
+                    onTabSelected = { tab ->
+                        navController.navigate(tab.route) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     ) { paddingValues ->
         DiveNavHost(
