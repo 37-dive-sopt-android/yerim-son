@@ -81,13 +81,11 @@ fun HomeScreen(
         Text(
             text = "Home",
             fontSize = 28.sp,
-            modifier = Modifier
-                .padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp)
         )
 
         Row (
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
@@ -109,8 +107,7 @@ fun HomeScreen(
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             items(profiles.size) { index ->
                 ProfileCard(profile = profiles[index])
@@ -143,9 +140,16 @@ private fun ProfileCard(profile: Profile) {
             Spacer(modifier = Modifier.width(12.dp))
 
             Column {
-                Text(text = profile.name, fontSize = 18.sp)
+                Text(
+                    text = profile.name,
+                    fontSize = 18.sp
+                )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = profile.description, fontSize = 14.sp, color = Color.Gray)
+                Text(
+                    text = profile.description,
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
             }
         }
     }
