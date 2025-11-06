@@ -23,11 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.sopt.dive.R
 import com.sopt.dive.ui.theme.DiveTheme
+import com.sopt.dive.util.UserInfo
+import com.sopt.dive.util.UserPreferences
 
 data class Profile(
     val imageUrl: String,
@@ -48,7 +53,12 @@ val dummyProfiles = List(20) { index ->
 fun HomeRoute(
     paddingValues: PaddingValues
 ) {
+    val context = LocalContext.current
+    val userPrefs = UserPreferences(context)
+    val userInfo = userPrefs.getUserInfo()
+
     HomeScreen(
+        userInfo = userInfo,
         profiles = dummyProfiles,
         modifier = Modifier
             .padding(paddingValues)
@@ -58,6 +68,7 @@ fun HomeRoute(
 
 @Composable
 fun HomeScreen(
+    userInfo: UserInfo,
     profiles: List<Profile>,
     modifier: Modifier = Modifier
 ) {
@@ -73,6 +84,28 @@ fun HomeScreen(
             modifier = Modifier
                 .padding(bottom = 16.dp)
         )
+
+        Row (
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_profile),
+                contentDescription = "Profile Image",
+                modifier = Modifier.size(50.dp)
+            )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Text(
+                text = userInfo.nickname ?: "",
+                fontSize = 20.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -122,6 +155,14 @@ private fun ProfileCard(profile: Profile) {
 @Composable
 private fun HomePreview() {
     DiveTheme {
-        HomeScreen(profiles = dummyProfiles)
+        HomeScreen(
+            userInfo = UserInfo(
+                id = "testUser",
+                pw = "1234",
+                nickname = "테스트",
+                mbti = "ENFP"
+            ),
+            profiles = dummyProfiles
+        )
     }
 }
