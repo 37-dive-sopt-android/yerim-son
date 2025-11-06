@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,16 +26,19 @@ import androidx.compose.ui.unit.sp
 import com.sopt.dive.R
 import com.sopt.dive.component.LabeledInfoText
 import com.sopt.dive.ui.theme.DiveTheme
+import com.sopt.dive.util.UserInfo
+import com.sopt.dive.util.UserPreferences
 
 @Composable
 fun MyRoute(
     paddingValues: PaddingValues
 ) {
+    val context = LocalContext.current
+    val userPrefs = UserPreferences(context)
+    val userInfo = userPrefs.getUserInfo()
+
     MyScreen(
-        id = "test12",
-        pw = "12341234",
-        nickname = "안두콩",
-        mbti = "ENFP",
+        userInfo = userInfo,
         modifier = Modifier
             .padding(paddingValues)
     )
@@ -42,10 +46,7 @@ fun MyRoute(
 
 @Composable
 fun MyScreen(
-    id: String,
-    pw: String,
-    nickname: String,
-    mbti: String,
+    userInfo: UserInfo,
     modifier: Modifier
 ) {
     Column (
@@ -76,17 +77,17 @@ fun MyScreen(
             Spacer(modifier = Modifier.width(10.dp))
 
             Text(
-                text = "$nickname 님",
+                text = userInfo.nickname ?: "",
                 fontSize = 20.sp
             )
         }
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        LabeledInfoText(label = "ID", value = id)
-        LabeledInfoText(label = "PW", value = pw)
-        LabeledInfoText(label = "NICKNAME", value = nickname)
-        LabeledInfoText(label = "MBTI", value = mbti)
+        LabeledInfoText(label = "ID", value = userInfo.id)
+        LabeledInfoText(label = "PW", value = userInfo.pw)
+        LabeledInfoText(label = "NICKNAME", value = userInfo.nickname)
+        LabeledInfoText(label = "MBTI", value = userInfo.mbti)
     }
 }
 
@@ -94,6 +95,14 @@ fun MyScreen(
 @Composable
 private fun MyPreview() {
     DiveTheme {
-        MyScreen("honggill", "dong1234", "홍길동", "ENFP", modifier = Modifier)
+        MyScreen(
+            userInfo = UserInfo(
+                id = "testUser",
+                pw = "1234",
+                nickname = "테스트",
+                mbti = "ENFP"
+            ),
+            modifier = Modifier
+        )
     }
 }

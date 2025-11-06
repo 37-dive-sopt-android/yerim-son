@@ -15,7 +15,7 @@ import com.sopt.dive.ui.theme.DiveTheme
 @Composable
 fun LabeledInfoText(
     label: String,
-    value: String,
+    value: String?,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.padding(bottom = 32.dp)) {
@@ -25,7 +25,7 @@ fun LabeledInfoText(
             modifier = Modifier.padding(bottom = 6.dp)
         )
         Text(
-            text = value,
+            text = value ?: "",
             fontSize = 18.sp,
             color = Color.Gray
         )
@@ -36,7 +36,7 @@ fun LabeledInfoText(
 @Composable
 private fun LabeledInfoTextPreview() {
     DiveTheme {
-        val id = "abcdef"
+        val id = "testUser"
 
         Column(modifier = Modifier.fillMaxWidth()) {
             LabeledInfoText(
