@@ -1,0 +1,108 @@
+package com.sopt.dive.my
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.sopt.dive.R
+import com.sopt.dive.component.LabeledInfoText
+import com.sopt.dive.ui.theme.DiveTheme
+import com.sopt.dive.util.UserInfo
+import com.sopt.dive.util.UserPreferences
+
+@Composable
+fun MyRoute(
+    paddingValues: PaddingValues
+) {
+    val context = LocalContext.current
+    val userPrefs = UserPreferences(context)
+    val userInfo = userPrefs.getUserInfo()
+
+    MyScreen(
+        userInfo = userInfo,
+        modifier = Modifier
+            .padding(paddingValues)
+    )
+}
+
+@Composable
+fun MyScreen(
+    userInfo: UserInfo,
+    modifier: Modifier
+) {
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(20.dp)
+    ) {
+        Text(
+            text = "My",
+            fontSize = 28.sp,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+        )
+
+        Row (
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_profile),
+                contentDescription = "Profile Image",
+                modifier = Modifier.size(50.dp)
+            )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Text(
+                text = userInfo.nickname ?: "",
+                fontSize = 20.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        LabeledInfoText(label = "ID", value = userInfo.id)
+        LabeledInfoText(label = "PW", value = userInfo.pw)
+        LabeledInfoText(label = "NICKNAME", value = userInfo.nickname)
+        LabeledInfoText(label = "MBTI", value = userInfo.mbti)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MyPreview() {
+    DiveTheme {
+        MyScreen(
+            userInfo = UserInfo(
+                id = "testUser",
+                pw = "1234",
+                nickname = "테스트",
+                mbti = "ENFP"
+            ),
+            modifier = Modifier
+        )
+    }
+}
