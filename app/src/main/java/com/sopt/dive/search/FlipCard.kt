@@ -41,10 +41,7 @@ fun FlipCard(
                 rotationY = rotation
                 cameraDistance = 12f * density
             }
-            .graphicsLayer {
-                if (rotation > 90f) rotationY = 180f
-            }
-            .aspectRatio(2f/3f)
+            .aspectRatio(2f / 3f)
             .clip(RoundedCornerShape(10.dp))
             .clickable { isFlipped = !isFlipped }
     )
