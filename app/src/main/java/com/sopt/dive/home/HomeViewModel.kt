@@ -19,7 +19,7 @@ class HomeViewModel: ViewModel() {
         loadDummyProfiles()
     }
 
-    fun loadDummyProfiles() {
+    private fun loadDummyProfiles() {
         viewModelScope.launch {
             _profiles.value = List(20) { index ->
                 Profile(
