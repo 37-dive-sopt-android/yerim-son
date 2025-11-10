@@ -1,5 +1,8 @@
 package com.sopt.dive.home
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.dive.util.UserInfo
@@ -12,8 +15,8 @@ class HomeViewModel: ViewModel() {
     private val _profiles = MutableStateFlow<List<Profile>>(emptyList())
     val profiles: StateFlow<List<Profile>> = _profiles
 
-    private val _userInfo = MutableStateFlow<UserInfo?>(null)
-    val userInfo: StateFlow<UserInfo?> = _userInfo
+    var userInfo by mutableStateOf<UserInfo?>(null)
+        private set
 
     init {
         loadDummyProfiles()
@@ -32,7 +35,7 @@ class HomeViewModel: ViewModel() {
     }
 
     fun loadUserInfo(userInfo: UserInfo) {
-        _userInfo.value = userInfo
+        this.userInfo = userInfo
     }
 
 }

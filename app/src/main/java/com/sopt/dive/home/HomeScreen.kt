@@ -59,7 +59,7 @@ fun HomeRoute(
     }
 
     val profiles by viewModel.profiles.collectAsState()
-    val user by viewModel.userInfo.collectAsState()
+    val user = viewModel.userInfo
 
     HomeScreen(
         userInfo = user,
