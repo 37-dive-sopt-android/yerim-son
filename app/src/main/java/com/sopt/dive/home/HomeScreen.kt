@@ -101,7 +101,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.width(10.dp))
 
             Text(
-                text = userInfo?.nickname ?: "",
+                text = userInfo?.nickname.orEmpty(),
                 fontSize = 20.sp
             )
         }
