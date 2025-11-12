@@ -38,69 +38,15 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : ComponentActivity() {
-    private val userService by lazy { ServicePool.userService }
-    private val userListState = mutableStateOf<ResponseUserListDto?>(null)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getUserList(page = 2)
-
-        enableEdgeToEdge()
         setContent {
             DiveTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    UserListScreen(
-                        userList = userListState.value,
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MainScreen()
             }
         }
     }
-
-    private fun getUserList(page: Int) {
-        userService.getUserList(page = page).enqueue(object
-            : Callback<ResponseUserListDto> {
-            override fun onResponse(
-                call: Call<ResponseUserListDto>,
-                response: Response<ResponseUserListDto?>
-            ) {
-                if (response.isSuccessful) {
-                    userListState.value = response.body()
-                } else {
-                    val error = response.message()
-                    Log.e("error", error.toString())
-                }
-            }
-
-            override fun onFailure(p0: Call<ResponseUserListDto>, t: Throwable) {
-                Log.e("failure", t.message.toString())
-            }
-        })
-    }
 }
-
-@Composable
-fun UserListScreen(
-    userList: ResponseUserListDto?,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier) {
-        userList?.data?.forEach { user ->
-            Text(text = "${user.firstName} ${user.lastName}")
-        }
-    }
-}
-
-//class MainActivity : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            DiveTheme {
-//                MainScreen()
-//            }
-//        }
-//    }
-//}
 
 @Composable
 fun DiveNavHost(
@@ -155,20 +101,18 @@ fun MainScreen() {
 
     Scaffold(
         bottomBar = {
-            if (showBottomBar) {
-                DiveBottomBar(
-                    visible = true,
-                    tabs = tabs,
-                    currentTab = currentTab,
-                    onTabSelected = { tab ->
-                        navController.navigate(tab.route) {
-                            launchSingleTop = true
-                            restoreState = true
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        }
+            DiveBottomBar(
+                visible = showBottomBar,
+                tabs = tabs,
+                currentTab = currentTab,
+                onTabSelected = { tab ->
+                    navController.navigate(tab.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
                     }
-                )
-            }
+                }
+            )
         }
     ) { paddingValues ->
         DiveNavHost(
