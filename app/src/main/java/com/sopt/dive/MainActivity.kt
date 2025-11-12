@@ -1,13 +1,13 @@
 package com.sopt.dive
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination.Companion.hasRoute
 import com.sopt.dive.ui.theme.DiveTheme
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -74,35 +74,29 @@ fun MainScreen() {
     val tabs = MainTab.entries
 
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
-    val currentRoute = currentDestination?.route ?: MainTab.HOME.route
-    Log.d("MainScreen", "currentRoute = $currentRoute")
 
-    val currentTab = tabs.find { it.route == currentRoute } ?: MainTab.HOME
+    val currentTab = MainTab.find { tab ->
+        currentDestination?.hasRoute(tab.route::class) == true
+    } ?: MainTab.HOME
 
-    val bottomBarRoutes = listOf(
-        MainTab.HOME.route,
-        MainTab.SEARCH.route,
-        MainTab.MYPAGE.route
-    )
-
-    val showBottomBar = bottomBarRoutes.contains(currentRoute)
+    val showBottomBar = MainTab.contains { tab ->
+        currentDestination?.hasRoute(tab.route::class) == true
+    }
 
     Scaffold(
         bottomBar = {
-            if (showBottomBar) {
-                DiveBottomBar(
-                    visible = true,
-                    tabs = tabs,
-                    currentTab = currentTab,
-                    onTabSelected = { tab ->
-                        navController.navigate(tab.route) {
-                            launchSingleTop = true
-                            restoreState = true
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        }
+            DiveBottomBar(
+                visible = showBottomBar,
+                tabs = tabs,
+                currentTab = currentTab,
+                onTabSelected = { tab ->
+                    navController.navigate(tab.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
                     }
-                )
-            }
+                }
+            )
         }
     ) { paddingValues ->
         DiveNavHost(

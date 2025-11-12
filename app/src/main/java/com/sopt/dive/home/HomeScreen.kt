@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,11 +31,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.sopt.dive.R
 import com.sopt.dive.ui.theme.DiveTheme
 import com.sopt.dive.util.UserInfo
 import com.sopt.dive.util.UserPreferences
+import androidx.compose.runtime.getValue
 
 data class Profile(
     val imageUrl: String,
@@ -41,35 +45,33 @@ data class Profile(
     val description: String
 )
 
-// 더미 데이터 생성
-val dummyProfiles = List(20) { index ->
-    Profile(
-        imageUrl = "https://static.megamart.com/product/image/1392/13924003/13924003_1_960.jpg",
-        name = "안두콩${index + 1}",
-        description = "내용 ${index + 1}"
-    )
-}
-
 @Composable
 fun HomeRoute(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    viewModel: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val userPrefs = UserPreferences(context)
     val userInfo = userPrefs.getUserInfo()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadUserInfo(userInfo)
+    }
+
+    val profiles by viewModel.profiles.collectAsState()
+    val user = viewModel.userInfo
+
     HomeScreen(
-        userInfo = userInfo,
-        profiles = dummyProfiles,
-        modifier = Modifier
-            .padding(paddingValues)
+        userInfo = user,
+        profiles = profiles,
+        modifier = Modifier.padding(paddingValues)
     )
 }
 
 
 @Composable
 fun HomeScreen(
-    userInfo: UserInfo,
+    userInfo: UserInfo?,
     profiles: List<Profile>,
     modifier: Modifier = Modifier
 ) {
@@ -99,7 +101,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.width(10.dp))
 
             Text(
-                text = userInfo.nickname ?: "",
+                text = userInfo?.nickname.orEmpty(),
                 fontSize = 20.sp
             )
         }
@@ -167,7 +169,13 @@ private fun HomePreview() {
                 nickname = "테스트",
                 mbti = "ENFP"
             ),
-            profiles = dummyProfiles
+            profiles = List(5) { index ->
+                Profile(
+                    imageUrl = "",
+                    name = "안두콩${index + 1}",
+                    description = "내용 ${index + 1}"
+                )
+            }
         )
     }
 }
