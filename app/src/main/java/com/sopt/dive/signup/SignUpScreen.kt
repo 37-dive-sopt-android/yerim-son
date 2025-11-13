@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sopt.dive.component.DiveBasicButton
 import com.sopt.dive.component.LabeledTextField
 import com.sopt.dive.ui.theme.DiveTheme
@@ -33,18 +34,21 @@ fun SignUpRoute(
     val (pw, setPw) = remember { mutableStateOf("") }
     val (nickname, setNickname) = remember { mutableStateOf("") }
     val (mbti, setMbti) = remember { mutableStateOf("") }
+    val (age, setAge) = remember { mutableStateOf("") }
 
     val userPrefs = remember { UserPreferences(context) }
 
     SignUpScreen(
         id = id,
         pw = pw,
-        nickname = nickname,
-        mbti = mbti,
+        name = nickname,
+        email = mbti,
+        age = age,
         onIdChange = setId,
         onPasswordChange = setPw,
-        onNicknameChange = setNickname,
-        onMbtiChange = setMbti,
+        onNameChange = setNickname,
+        onEmailChange = setMbti,
+        onAgeChange = setAge,
         onButtonClick = {
             val result = DiveValidator.validateSignUp(id, pw, nickname, mbti)
             if (!result.isValid) {
@@ -62,12 +66,14 @@ fun SignUpRoute(
 fun SignUpScreen(
     id: String,
     pw: String,
-    nickname: String,
-    mbti: String,
+    name: String,
+    email: String,
+    age: String,
     onIdChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onNicknameChange: (String) -> Unit,
-    onMbtiChange: (String) -> Unit,
+    onNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onAgeChange: (String) -> Unit,
     onButtonClick: () -> Unit,
     ) {
 
@@ -83,7 +89,7 @@ fun SignUpScreen(
             fontSize = 28.sp,
             modifier = Modifier
                 .padding(top = 20.dp)
-                .padding(bottom = 120.dp)
+                .padding(bottom = 80.dp)
                 .padding(horizontal = 30.dp),
         )
 
@@ -91,7 +97,7 @@ fun SignUpScreen(
             label = "ID",
             value = id,
             onValueChange = onIdChange,
-            placeholder = "아이디를 입력해주세요"
+            placeholder = "사용자명을 입력해주세요"
         )
 
         LabeledTextField(
@@ -103,17 +109,24 @@ fun SignUpScreen(
         )
 
         LabeledTextField(
-            label = "닉네임",
-            value = nickname,
-            onValueChange = onNicknameChange,
+            label = "이름",
+            value = name,
+            onValueChange = onNameChange,
             placeholder = "닉네임을 입력해주세요"
         )
 
         LabeledTextField(
-            label = "MBTI",
-            value = mbti,
-            onValueChange = onMbtiChange,
-            placeholder = "MBTI를 입력해주세요"
+            label = "이메일",
+            value = email,
+            onValueChange = onEmailChange,
+            placeholder = "이메일을 입력해주세요"
+        )
+
+        LabeledTextField(
+            label = "나이",
+            value = age,
+            onValueChange = onAgeChange,
+            placeholder = "나이를 입력해주세요"
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -133,13 +146,15 @@ private fun SignUpScreenPreview() {
         SignUpScreen(
             id = "testUser",
             pw = "123456",
-            nickname = "테스트",
-            mbti = "ENFJ",
+            name = "테스트",
+            email = "ENFJ",
+            age = "1",
             onIdChange = {},
             onPasswordChange = {},
-            onNicknameChange = {},
-            onMbtiChange = {},
-            onButtonClick = {}
+            onNameChange = {},
+            onEmailChange = {},
+            onAgeChange = {},
+            onButtonClick = {},
         )
     }
 }
