@@ -5,18 +5,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.dive.data.ServicePool
+import com.sopt.dive.data.UserDataSourceImpl
+import com.sopt.dive.data.UserRepository
+import com.sopt.dive.data.UserRepositoryImpl
+import com.sopt.dive.my.MyUiState
+import com.sopt.dive.util.UiState
 import com.sopt.dive.util.UserInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel: ViewModel() {
+class HomeViewModel(
+    private val userRepository: UserRepository = UserRepositoryImpl(UserDataSourceImpl(ServicePool.userService))
+): ViewModel() {
 
     private val _profiles = MutableStateFlow<List<Profile>>(emptyList())
     val profiles: StateFlow<List<Profile>> = _profiles
 
-    var userInfo by mutableStateOf<UserInfo?>(null)
-        private set
+    private val _uiState = MutableStateFlow<UiState<HomeUiState>>(UiState.Success(HomeUiState()))
+    val uiState: StateFlow<UiState<HomeUiState>> = _uiState.asStateFlow()
 
     init {
         loadDummyProfiles()
@@ -34,8 +44,22 @@ class HomeViewModel: ViewModel() {
         }
     }
 
-    fun loadUserInfo(userInfo: UserInfo) {
-        this.userInfo = userInfo
+    fun loadUserInfo(userId: Long){
+        viewModelScope.launch {
+            userRepository.getUserInfo(userId)
+                .onSuccess { userDataModel ->
+                    _uiState.update {
+                        UiState.Success(
+                            HomeUiState(
+                                name = userDataModel.name
+                            )
+                        )
+                    }
+                }
+                .onFailure {
+                    _uiState.update { UiState.Failure }
+                }
+        }
     }
 
 }
