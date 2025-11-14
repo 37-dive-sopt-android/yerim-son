@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 
 data class UserInfo(
+    val id: Long?,
     val username: String?,
     val pw: String?,
     val name: String?,
@@ -18,6 +19,7 @@ class UserPreferences(context: Context) {
 
     companion object {
         private const val PREF_NAME = "user_prefs"
+        private const val KEY_USER_ID = "user_id"
         private const val KEY_USERNAME = "username"
         private const val KEY_PW = "pw"
         private const val KEY_NAME = "name"
@@ -41,14 +43,14 @@ class UserPreferences(context: Context) {
         return savedId == id && savedPw == pw
     }
 
-    fun getUserInfo(): UserInfo {
-        return UserInfo(
-            username = prefs.getString(KEY_USERNAME, null),
-            pw = prefs.getString(KEY_PW, null),
-            name = prefs.getString(KEY_NAME, null),
-            email = prefs.getString(KEY_EMAIL, null),
-            age = prefs.getString(KEY_AGE, null),
-        )
+    fun setUserId(userId: Long) {
+        prefs.edit()
+            .putLong(KEY_USER_ID, userId)
+            .apply()
+    }
+
+    fun getUserId(): Long {
+        return prefs.getLong(KEY_USER_ID, -1L)
     }
 
 }

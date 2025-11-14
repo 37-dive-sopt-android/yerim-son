@@ -38,6 +38,7 @@ fun LoginRoute(
     viewModel: LoginViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val userPrefs = UserPreferences(context)
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -47,6 +48,7 @@ fun LoginRoute(
 
             LaunchedEffect(data.userId) {
                 if (data.userId != null) {
+                    userPrefs.setUserId(data.userId)
                     Toast.makeText(context, "로그인에 성공했습니다!", Toast.LENGTH_SHORT).show()
                     onLoginSuccess()
                     viewModel.resetLoginState()

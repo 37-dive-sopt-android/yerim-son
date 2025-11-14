@@ -1,5 +1,6 @@
 package com.sopt.dive.my
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,30 +25,57 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sopt.dive.R
 import com.sopt.dive.component.LabeledInfoText
 import com.sopt.dive.ui.theme.DiveTheme
-import com.sopt.dive.util.UserInfo
 import com.sopt.dive.util.UserPreferences
+import androidx.compose.runtime.getValue
+import com.sopt.dive.util.UiState
 
 @Composable
 fun MyRoute(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    viewModel: MyViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val userPrefs = UserPreferences(context)
-    val userInfo = userPrefs.getUserInfo()
+    val userId = userPrefs.getUserId()
 
-    MyScreen(
-        userInfo = userInfo,
-        modifier = Modifier
-            .padding(paddingValues)
-    )
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(userId) {
+        viewModel.loadUserInfo(userId)
+    }
+
+    when (uiState) {
+        is UiState.Success -> {
+            val data = (uiState as UiState.Success<MyUiState>).data
+            MyScreen(
+                username = data.username,
+                name = data.name,
+                email = data.email,
+                age = data.age,
+                modifier = Modifier.padding(paddingValues)
+            )
+        }
+        is UiState.Failure -> {
+            LaunchedEffect(Unit) {
+                Toast.makeText(context, "사용자 정보를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        else -> {}
+    }
+
 }
 
 @Composable
 fun MyScreen(
-    userInfo: UserInfo,
+    username: String,
+    name: String,
+    email: String,
+    age: Int,
     modifier: Modifier
 ) {
     Column (
@@ -77,18 +106,17 @@ fun MyScreen(
             Spacer(modifier = Modifier.width(10.dp))
 
             Text(
-                text = userInfo.name ?: "",
+                text = name,
                 fontSize = 20.sp
             )
         }
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        LabeledInfoText(label = "USERNAME", value = userInfo.username)
-        LabeledInfoText(label = "PASSWORD", value = userInfo.pw)
-        LabeledInfoText(label = "NAME", value = userInfo.name)
-        LabeledInfoText(label = "EMAIL", value = userInfo.email)
-        LabeledInfoText(label = "AGE", value = userInfo.age)
+        LabeledInfoText(label = "USERNAME", value = username)
+        LabeledInfoText(label = "NAME", value = name)
+        LabeledInfoText(label = "EMAIL", value = email)
+        LabeledInfoText(label = "AGE", value = age.toString())
     }
 }
 
@@ -97,13 +125,10 @@ fun MyScreen(
 private fun MyPreview() {
     DiveTheme {
         MyScreen(
-            userInfo = UserInfo(
-                username = "testUser",
-                pw = "1234",
-                name = "테스트",
-                email = "test@email.com",
-                age = "25"
-            ),
+            username = "testUser",
+            name = "테스트",
+            email = "test@email.com",
+            age = 25,
             modifier = Modifier
         )
     }
