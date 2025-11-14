@@ -77,17 +77,18 @@ fun MyScreen(
             Spacer(modifier = Modifier.width(10.dp))
 
             Text(
-                text = userInfo.nickname ?: "",
+                text = userInfo.name ?: "",
                 fontSize = 20.sp
             )
         }
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        LabeledInfoText(label = "ID", value = userInfo.id)
-        LabeledInfoText(label = "PW", value = userInfo.pw)
-        LabeledInfoText(label = "NICKNAME", value = userInfo.nickname)
-        LabeledInfoText(label = "MBTI", value = userInfo.mbti)
+        LabeledInfoText(label = "USERNAME", value = userInfo.username)
+        LabeledInfoText(label = "PASSWORD", value = userInfo.pw)
+        LabeledInfoText(label = "NAME", value = userInfo.name)
+        LabeledInfoText(label = "EMAIL", value = userInfo.email)
+        LabeledInfoText(label = "AGE", value = userInfo.age)
     }
 }
 
@@ -97,10 +98,11 @@ private fun MyPreview() {
     DiveTheme {
         MyScreen(
             userInfo = UserInfo(
-                id = "testUser",
+                username = "testUser",
                 pw = "1234",
-                nickname = "테스트",
-                mbti = "ENFP"
+                name = "테스트",
+                email = "test@email.com",
+                age = "25"
             ),
             modifier = Modifier
         )

@@ -4,10 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 
 data class UserInfo(
-    val id: String?,
+    val username: String?,
     val pw: String?,
-    val nickname: String?,
-    val mbti: String?
+    val name: String?,
+    val email: String?,
+    val age: String?
 )
 
 class UserPreferences(context: Context) {
@@ -17,33 +18,37 @@ class UserPreferences(context: Context) {
 
     companion object {
         private const val PREF_NAME = "user_prefs"
-        private const val KEY_ID = "id"
+        private const val KEY_USERNAME = "username"
         private const val KEY_PW = "pw"
-        private const val KEY_NICKNAME = "nickname"
-        private const val KEY_MBTI = "mbti"
+        private const val KEY_NAME = "name"
+        private const val KEY_EMAIL = "email"
+        private const val KEY_AGE = "age"
     }
 
-    fun registerUser(id: String, pw: String, nickname: String, mbti: String) {
+    fun registerUser(username: String, pw: String, name: String, email: String, age: String) {
         prefs.edit()
-            .putString(KEY_ID, id)
+            .putString(KEY_USERNAME, username)
             .putString(KEY_PW, pw)
-            .putString(KEY_NICKNAME, nickname)
-            .putString(KEY_MBTI, mbti)
+            .putString(KEY_NAME, name)
+            .putString(KEY_EMAIL, email)
+            .putString(KEY_AGE, age)
             .apply()
     }
 
     fun isUserValid(id: String, pw: String): Boolean {
-        val savedId = prefs.getString(KEY_ID, null)
+        val savedId = prefs.getString(KEY_USERNAME, null)
         val savedPw = prefs.getString(KEY_PW, null)
         return savedId == id && savedPw == pw
     }
 
     fun getUserInfo(): UserInfo {
         return UserInfo(
-            id = prefs.getString(KEY_ID, null),
+            username = prefs.getString(KEY_USERNAME, null),
             pw = prefs.getString(KEY_PW, null),
-            nickname = prefs.getString(KEY_NICKNAME, null),
-            mbti = prefs.getString(KEY_MBTI, null)
+            name = prefs.getString(KEY_NAME, null),
+            email = prefs.getString(KEY_EMAIL, null),
+            age = prefs.getString(KEY_AGE, null),
         )
     }
+
 }
