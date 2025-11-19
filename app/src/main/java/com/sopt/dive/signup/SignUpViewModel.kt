@@ -19,7 +19,7 @@ class SignUpViewModel(
     private val userRepository: UserRepository = RepositoryProvider.userRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<SignUpUiState>>(UiState.Success(SignUpUiState()))
+    private val _uiState = MutableStateFlow<UiState<SignUpUiState>>(UiState.Loading)
     val uiState: StateFlow<UiState<SignUpUiState>> = _uiState.asStateFlow()
 
     fun signUp() {

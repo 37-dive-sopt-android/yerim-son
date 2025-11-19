@@ -19,7 +19,7 @@ class MyViewModel(
     private val userRepository: UserRepository = RepositoryProvider.userRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<MyUiState>>(UiState.Success(MyUiState()))
+    private val _uiState = MutableStateFlow<UiState<MyUiState>>(UiState.Loading)
     val uiState: StateFlow<UiState<MyUiState>> = _uiState.asStateFlow()
 
     fun loadUserInfo(userId: Long){

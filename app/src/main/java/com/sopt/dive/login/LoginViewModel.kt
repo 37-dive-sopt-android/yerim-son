@@ -18,7 +18,7 @@ class LoginViewModel(
     private val authRepository: AuthRepository = RepositoryProvider.authRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<LoginUiState>>(UiState.Success(LoginUiState()))
+    private val _uiState = MutableStateFlow<UiState<LoginUiState>>(UiState.Loading)
     val uiState: StateFlow<UiState<LoginUiState>> = _uiState.asStateFlow()
 
     fun login() {

@@ -21,7 +21,7 @@ class HomeViewModel(
     private val _profiles = MutableStateFlow<List<Profile>>(emptyList())
     val profiles: StateFlow<List<Profile>> = _profiles
 
-    private val _uiState = MutableStateFlow<UiState<HomeUiState>>(UiState.Success(HomeUiState()))
+    private val _uiState = MutableStateFlow<UiState<HomeUiState>>(UiState.Loading)
     val uiState: StateFlow<UiState<HomeUiState>> = _uiState.asStateFlow()
 
     init {
