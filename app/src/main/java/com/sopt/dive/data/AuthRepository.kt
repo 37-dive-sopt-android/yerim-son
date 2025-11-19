@@ -4,10 +4,7 @@ import com.sopt.dive.login.LoginModel
 import com.sopt.dive.login.LoginRequestModel
 import com.sopt.dive.login.toDto
 import com.sopt.dive.login.toModel
-import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.ensureActive
-import kotlin.coroutines.cancellation.CancellationException
+import com.sopt.dive.util.suspendRunCatching
 
 interface AuthRepository {
     suspend fun postLogin(
@@ -22,17 +19,4 @@ class AuthRepositoryImpl (
         suspendRunCatching {
             authDataSource.postLogin(request = request.toDto()).data!!.toModel()
         }
-}
-
-suspend fun <R> suspendRunCatching(block: suspend () -> R): Result<R> {
-    return try {
-        Result.success(block())
-    } catch (t: TimeoutCancellationException) {
-        Result.failure(t)
-    } catch (c: CancellationException) {
-        throw c
-    } catch (e: Throwable) {
-        currentCoroutineContext().ensureActive()
-        Result.failure(e)
-    }
 }

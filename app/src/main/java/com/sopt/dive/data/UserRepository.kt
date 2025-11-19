@@ -6,6 +6,7 @@ import com.sopt.dive.signup.SignUpModel
 import com.sopt.dive.signup.SignUpRequestModel
 import com.sopt.dive.signup.toDto
 import com.sopt.dive.signup.toModel
+import com.sopt.dive.util.suspendRunCatching
 
 interface UserRepository {
     suspend fun postSignUp(
