@@ -3,6 +3,7 @@ package com.sopt.dive.my
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sopt.dive.data.RepositoryProvider
 import com.sopt.dive.data.ServicePool
 import com.sopt.dive.data.UserDataSourceImpl
 import com.sopt.dive.data.UserRepository
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MyViewModel(
-    private val userRepository: UserRepository = UserRepositoryImpl(UserDataSourceImpl(ServicePool.userService))
+    private val userRepository: UserRepository = RepositoryProvider.userRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<MyUiState>>(UiState.Success(MyUiState()))

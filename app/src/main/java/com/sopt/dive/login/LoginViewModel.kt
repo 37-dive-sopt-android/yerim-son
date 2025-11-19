@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.sopt.dive.data.AuthDataSourceImpl
 import com.sopt.dive.data.AuthRepository
 import com.sopt.dive.data.AuthRepositoryImpl
+import com.sopt.dive.data.RepositoryProvider
 import com.sopt.dive.data.ServicePool
 import com.sopt.dive.util.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authRepository: AuthRepository = AuthRepositoryImpl(AuthDataSourceImpl(ServicePool.authService))
+    private val authRepository: AuthRepository = RepositoryProvider.authRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<LoginUiState>>(UiState.Success(LoginUiState()))

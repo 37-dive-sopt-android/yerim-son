@@ -2,6 +2,7 @@ package com.sopt.dive.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.dive.data.RepositoryProvider
 import com.sopt.dive.data.ServicePool
 import com.sopt.dive.data.UserDataSourceImpl
 import com.sopt.dive.data.UserRepository
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(
-    private val userRepository: UserRepository = UserRepositoryImpl(UserDataSourceImpl(ServicePool.userService))
+    private val userRepository: UserRepository = RepositoryProvider.userRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<SignUpUiState>>(UiState.Success(SignUpUiState()))
