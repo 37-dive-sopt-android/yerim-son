@@ -85,7 +85,7 @@ fun HomeRoute(
 
 @Composable
 fun HomeScreen(
-    name: String?,
+    name: String,
     profiles: List<Profile>,
     modifier: Modifier = Modifier
 ) {
@@ -115,7 +115,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.width(10.dp))
 
             Text(
-                text = name ?: "",
+                text = name,
                 fontSize = 20.sp
             )
         }
