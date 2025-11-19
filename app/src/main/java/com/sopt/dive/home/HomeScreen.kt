@@ -1,5 +1,6 @@
 package com.sopt.dive.home
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,8 @@ import com.sopt.dive.ui.theme.DiveTheme
 import com.sopt.dive.util.UserInfo
 import com.sopt.dive.util.UserPreferences
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sopt.dive.util.UiState
 
 data class Profile(
     val imageUrl: String,
@@ -52,26 +55,37 @@ fun HomeRoute(
 ) {
     val context = LocalContext.current
     val userPrefs = UserPreferences(context)
-    val userInfo = userPrefs.getUserInfo()
+    val userId = userPrefs.getUserId()
 
-    LaunchedEffect(Unit) {
-        viewModel.loadUserInfo(userInfo)
+    val profiles by viewModel.profiles.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(userId) {
+        viewModel.loadUserInfo(userId)
     }
 
-    val profiles by viewModel.profiles.collectAsState()
-    val user = viewModel.userInfo
-
-    HomeScreen(
-        userInfo = user,
-        profiles = profiles,
-        modifier = Modifier.padding(paddingValues)
-    )
+    when (uiState) {
+        is UiState.Success -> {
+            val data = (uiState as UiState.Success<HomeUiState>).data
+            HomeScreen(
+                name = data.name,
+                profiles = profiles,
+                modifier = Modifier.padding(paddingValues)
+            )
+        }
+        is UiState.Failure -> {
+            LaunchedEffect(Unit) {
+                Toast.makeText(context, "사용자 정보를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        else -> {}
+    }
 }
 
 
 @Composable
 fun HomeScreen(
-    userInfo: UserInfo?,
+    name: String,
     profiles: List<Profile>,
     modifier: Modifier = Modifier
 ) {
@@ -101,7 +115,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.width(10.dp))
 
             Text(
-                text = userInfo?.nickname.orEmpty(),
+                text = name,
                 fontSize = 20.sp
             )
         }
@@ -163,12 +177,7 @@ private fun ProfileCard(profile: Profile) {
 private fun HomePreview() {
     DiveTheme {
         HomeScreen(
-            userInfo = UserInfo(
-                id = "testUser",
-                pw = "1234",
-                nickname = "테스트",
-                mbti = "ENFP"
-            ),
+            name = "테스트",
             profiles = List(5) { index ->
                 Profile(
                     imageUrl = "",
