@@ -1,5 +1,6 @@
-package com.sopt.dive.data
+package com.sopt.dive.data.service
 
+import com.sopt.dive.data.BaseResponse
 import com.sopt.dive.my.UserDataResponseDto
 import com.sopt.dive.signup.SignUpRequestDto
 import com.sopt.dive.signup.SignUpResponseDto

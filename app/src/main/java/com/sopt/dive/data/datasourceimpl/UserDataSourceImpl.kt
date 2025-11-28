@@ -1,18 +1,11 @@
-package com.sopt.dive.data
+package com.sopt.dive.data.datasourceimpl
 
+import com.sopt.dive.data.BaseResponse
+import com.sopt.dive.data.service.UserService
+import com.sopt.dive.data.datasource.UserDataSource
 import com.sopt.dive.my.UserDataResponseDto
 import com.sopt.dive.signup.SignUpRequestDto
 import com.sopt.dive.signup.SignUpResponseDto
-
-interface UserDataSource {
-    suspend fun postSignUp(
-        request: SignUpRequestDto
-    ): BaseResponse<SignUpResponseDto>
-
-    suspend fun getUserInfo(
-        id: Long
-    ): BaseResponse<UserDataResponseDto>
-}
 
 class UserDataSourceImpl (
     private val userService: UserService

@@ -2,9 +2,9 @@ package com.sopt.dive.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.dive.data.AuthDataSourceImpl
-import com.sopt.dive.data.AuthRepository
-import com.sopt.dive.data.AuthRepositoryImpl
+import com.sopt.dive.data.datasourceimpl.AuthDataSourceImpl
+import com.sopt.dive.data.repository.AuthRepository
+import com.sopt.dive.data.repositoryimpl.AuthRepositoryImpl
 import com.sopt.dive.data.RepositoryProvider
 import com.sopt.dive.data.ServicePool
 import com.sopt.dive.util.UiState

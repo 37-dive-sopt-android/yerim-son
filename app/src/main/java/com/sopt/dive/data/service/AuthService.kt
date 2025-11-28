@@ -1,5 +1,6 @@
-package com.sopt.dive.data
+package com.sopt.dive.data.service
 
+import com.sopt.dive.data.BaseResponse
 import com.sopt.dive.login.LoginRequestDto
 import com.sopt.dive.login.LoginResponseDto
 import retrofit2.http.Body

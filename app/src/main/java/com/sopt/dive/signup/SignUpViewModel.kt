@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.dive.data.RepositoryProvider
 import com.sopt.dive.data.ServicePool
-import com.sopt.dive.data.UserDataSourceImpl
-import com.sopt.dive.data.UserRepository
-import com.sopt.dive.data.UserRepositoryImpl
+import com.sopt.dive.data.datasourceimpl.UserDataSourceImpl
+import com.sopt.dive.data.repository.UserRepository
+import com.sopt.dive.data.repositoryimpl.UserRepositoryImpl
 import com.sopt.dive.login.updateSuccess
 import com.sopt.dive.util.UiState
 import kotlinx.coroutines.flow.MutableStateFlow

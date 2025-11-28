@@ -1,16 +1,12 @@
-package com.sopt.dive.data
+package com.sopt.dive.data.repositoryimpl
 
+import com.sopt.dive.data.datasource.AuthDataSource
+import com.sopt.dive.data.repository.AuthRepository
 import com.sopt.dive.login.LoginModel
 import com.sopt.dive.login.LoginRequestModel
 import com.sopt.dive.login.toDto
 import com.sopt.dive.login.toModel
 import com.sopt.dive.util.suspendRunCatching
-
-interface AuthRepository {
-    suspend fun postLogin(
-        request: LoginRequestModel
-    ): Result<LoginModel>
-}
 
 class AuthRepositoryImpl (
     private val authDataSource: AuthDataSource
