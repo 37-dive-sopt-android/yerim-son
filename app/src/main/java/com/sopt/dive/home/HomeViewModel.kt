@@ -18,9 +18,11 @@ class HomeViewModel(
     private val userRepository: UserRepository = RepositoryProvider.userRepository
 ): ViewModel() {
 
+    // Flow: UI 상태 관리용
     private val _profiles = MutableStateFlow<List<Profile>>(emptyList())
     val profiles: StateFlow<List<Profile>> = _profiles
 
+    // Flow: UI 상태 관리용
     private val _uiState = MutableStateFlow<UiState<HomeUiState>>(UiState.Loading)
     val uiState: StateFlow<UiState<HomeUiState>> = _uiState.asStateFlow()
 
@@ -29,6 +31,7 @@ class HomeViewModel(
     }
 
     private fun loadDummyProfiles() {
+        // Coroutine: 비동기 더미 데이터 생성
         viewModelScope.launch {
             _profiles.value = List(20) { index ->
                 Profile(
@@ -40,10 +43,13 @@ class HomeViewModel(
         }
     }
 
+    // Coroutine + Flow: 서버/데이터 로드
     fun loadUserInfo(userId: Long){
+        // viewModelScope.launch 안에서 suspend 함수 호출
         viewModelScope.launch {
             userRepository.getUserInfo(userId)
                 .onSuccess { userDataModel ->
+                    // Flow를 update해서 UI에 반영
                     _uiState.update {
                         UiState.Success(
                             HomeUiState(
