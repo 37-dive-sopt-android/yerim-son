@@ -57,9 +57,11 @@ fun HomeRoute(
     val userPrefs = UserPreferences(context)
     val userId = userPrefs.getUserId()
 
+    // Flow 구독: Compose UI에 연결
     val profiles by viewModel.profiles.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    // Coroutine: userId 변경 시 데이터 로드
     LaunchedEffect(userId) {
         viewModel.loadUserInfo(userId)
     }
