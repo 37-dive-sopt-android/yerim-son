@@ -32,9 +32,6 @@ fun SignUpRoute(
     viewModel: SignUpViewModel = viewModel()
 ) {
     val context = LocalContext.current
-
-    val userPrefs = remember { UserPreferences(context) }
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     when (uiState) {
