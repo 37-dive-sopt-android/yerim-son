@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,44 +22,56 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sopt.dive.component.DiveBasicButton
 import com.sopt.dive.component.LabeledTextField
 import com.sopt.dive.ui.theme.DiveTheme
 import com.sopt.dive.util.DiveValidator
+import com.sopt.dive.util.UiState
 import com.sopt.dive.util.UserPreferences
 
 @Composable
 fun LoginRoute(
     onSignUpClick: () -> Unit,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: () -> Unit,
+    viewModel: LoginViewModel = viewModel()
 ) {
-    var id by remember { mutableStateOf("") }
-    var pw by remember { mutableStateOf("") }
     val context = LocalContext.current
-    val userPrefs = remember { UserPreferences(context) }
+    val userPrefs = UserPreferences(context)
 
-    LoginScreen(
-        id = id,
-        pw = pw,
-        onIdChange = { id = it },
-        onPasswordChange = { pw = it },
-        onTextClick = onSignUpClick,
-        onButtonClick = {
-            val validationResult = DiveValidator.validateLogin(id, pw)
-            if (!validationResult.isValid) {
-                Toast.makeText(context, validationResult.message, Toast.LENGTH_SHORT).show()
-                return@LoginScreen
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    when (uiState) {
+        is UiState.Success -> {
+            val data = (uiState as UiState.Success<LoginUiState>).data
+
+            LaunchedEffect(data.userId) {
+                if (data.userId != null) {
+                    userPrefs.setUserId(data.userId)
+                    Toast.makeText(context, "로그인에 성공했습니다!", Toast.LENGTH_SHORT).show()
+                    onLoginSuccess()
+                    viewModel.resetLoginState()
+                }
             }
 
-            val isValidUser = userPrefs.isUserValid(id, pw)
-            if (isValidUser) {
-                Toast.makeText(context, "로그인에 성공했습니다!", Toast.LENGTH_SHORT).show()
-                onLoginSuccess()
-            } else {
+            LoginScreen(
+                id = data.username,
+                pw = data.password,
+                onIdChange = viewModel::updateUsername,
+                onPasswordChange = viewModel::updatePassword,
+                onTextClick = onSignUpClick,
+                onButtonClick = viewModel::login
+            )
+        }
+        is UiState.Failure -> {
+            LaunchedEffect(Unit) {
                 Toast.makeText(context, "아이디 또는 비밀번호가 올바르지 않습니다.", Toast.LENGTH_SHORT).show()
+                viewModel.resetLoginState()
             }
         }
-    )
+        else -> {}
+    }
 }
 
 @Composable

@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,57 +17,71 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sopt.dive.component.DiveBasicButton
 import com.sopt.dive.component.LabeledTextField
 import com.sopt.dive.ui.theme.DiveTheme
-import com.sopt.dive.util.DiveValidator
 import com.sopt.dive.util.UserPreferences
+import androidx.compose.runtime.getValue
+import com.sopt.dive.util.UiState
 
 @Composable
 fun SignUpRoute(
     onSignUpSuccess: () -> Unit,
+    viewModel: SignUpViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val (id, setId) = remember { mutableStateOf("") }
-    val (pw, setPw) = remember { mutableStateOf("") }
-    val (nickname, setNickname) = remember { mutableStateOf("") }
-    val (mbti, setMbti) = remember { mutableStateOf("") }
+    when (uiState) {
+        is UiState.Success -> {
+            val data = (uiState as UiState.Success<SignUpUiState>).data
 
-    val userPrefs = remember { UserPreferences(context) }
+            LaunchedEffect(data.signUpSuccessName) {
+                if (data.signUpSuccessName != null) {
+                    Toast.makeText(context, "회원가입이 완료되었습니다!", Toast.LENGTH_SHORT).show()
+                    onSignUpSuccess()
+                    viewModel.resetSignUpState()
+                }
+            }
 
-    SignUpScreen(
-        id = id,
-        pw = pw,
-        nickname = nickname,
-        mbti = mbti,
-        onIdChange = setId,
-        onPasswordChange = setPw,
-        onNicknameChange = setNickname,
-        onMbtiChange = setMbti,
-        onButtonClick = {
-            val result = DiveValidator.validateSignUp(id, pw, nickname, mbti)
-            if (!result.isValid) {
-                Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
-            } else {
-                userPrefs.registerUser(id, pw, nickname, mbti)
-                Toast.makeText(context, "회원가입이 완료되었습니다!", Toast.LENGTH_SHORT).show()
-                onSignUpSuccess()
+            SignUpScreen(
+                id = data.username,
+                pw = data.password,
+                name = data.name,
+                email = data.email,
+                age = data.age,
+                onIdChange = viewModel::updateUsername,
+                onPasswordChange = viewModel::updatePassword,
+                onNameChange = viewModel::updateName,
+                onEmailChange = viewModel::updateEmail,
+                onAgeChange = viewModel::updateAge,
+                onButtonClick = viewModel::signUp
+            )
+        }
+        is UiState.Failure -> {
+            LaunchedEffect(Unit) {
+                Toast.makeText(context, "회원가입에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                viewModel.resetSignUpState()
             }
         }
-    )
+        else -> {}
+    }
 }
 
 @Composable
 fun SignUpScreen(
     id: String,
     pw: String,
-    nickname: String,
-    mbti: String,
+    name: String,
+    email: String,
+    age: String,
     onIdChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onNicknameChange: (String) -> Unit,
-    onMbtiChange: (String) -> Unit,
+    onNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onAgeChange: (String) -> Unit,
     onButtonClick: () -> Unit,
     ) {
 
@@ -83,7 +97,7 @@ fun SignUpScreen(
             fontSize = 28.sp,
             modifier = Modifier
                 .padding(top = 20.dp)
-                .padding(bottom = 120.dp)
+                .padding(bottom = 80.dp)
                 .padding(horizontal = 30.dp),
         )
 
@@ -91,7 +105,7 @@ fun SignUpScreen(
             label = "ID",
             value = id,
             onValueChange = onIdChange,
-            placeholder = "아이디를 입력해주세요"
+            placeholder = "사용자명을 입력해주세요"
         )
 
         LabeledTextField(
@@ -103,17 +117,24 @@ fun SignUpScreen(
         )
 
         LabeledTextField(
-            label = "닉네임",
-            value = nickname,
-            onValueChange = onNicknameChange,
+            label = "이름",
+            value = name,
+            onValueChange = onNameChange,
             placeholder = "닉네임을 입력해주세요"
         )
 
         LabeledTextField(
-            label = "MBTI",
-            value = mbti,
-            onValueChange = onMbtiChange,
-            placeholder = "MBTI를 입력해주세요"
+            label = "이메일",
+            value = email,
+            onValueChange = onEmailChange,
+            placeholder = "이메일을 입력해주세요"
+        )
+
+        LabeledTextField(
+            label = "나이",
+            value = age,
+            onValueChange = onAgeChange,
+            placeholder = "나이를 입력해주세요"
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -133,13 +154,15 @@ private fun SignUpScreenPreview() {
         SignUpScreen(
             id = "testUser",
             pw = "123456",
-            nickname = "테스트",
-            mbti = "ENFJ",
+            name = "테스트",
+            email = "ENFJ",
+            age = "1",
             onIdChange = {},
             onPasswordChange = {},
-            onNicknameChange = {},
-            onMbtiChange = {},
-            onButtonClick = {}
+            onNameChange = {},
+            onEmailChange = {},
+            onAgeChange = {},
+            onButtonClick = {},
         )
     }
 }

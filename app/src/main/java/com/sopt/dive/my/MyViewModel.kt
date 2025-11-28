@@ -1,7 +1,8 @@
-package com.sopt.dive.home
+package com.sopt.dive.my
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sopt.dive.data.RepositoryProvider
 import com.sopt.dive.data.ServicePool
 import com.sopt.dive.data.datasourceimpl.UserDataSourceImpl
@@ -14,31 +15,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
+class MyViewModel(
     private val userRepository: UserRepository = RepositoryProvider.userRepository
-): ViewModel() {
+) : ViewModel() {
 
-    private val _profiles = MutableStateFlow<List<Profile>>(emptyList())
-    val profiles: StateFlow<List<Profile>> = _profiles
-
-    private val _uiState = MutableStateFlow<UiState<HomeUiState>>(UiState.Loading)
-    val uiState: StateFlow<UiState<HomeUiState>> = _uiState.asStateFlow()
-
-    init {
-        loadDummyProfiles()
-    }
-
-    private fun loadDummyProfiles() {
-        viewModelScope.launch {
-            _profiles.value = List(20) { index ->
-                Profile(
-                    imageUrl = "https://static.megamart.com/product/image/1392/13924003/13924003_1_960.jpg",
-                    name = "안두콩${index + 1}",
-                    description = "콩 ${index + 1}개 굴러가유~"
-                )
-            }
-        }
-    }
+    private val _uiState = MutableStateFlow<UiState<MyUiState>>(UiState.Loading)
+    val uiState: StateFlow<UiState<MyUiState>> = _uiState.asStateFlow()
 
     fun loadUserInfo(userId: Long){
         viewModelScope.launch {
@@ -46,8 +28,12 @@ class HomeViewModel(
                 .onSuccess { userDataModel ->
                     _uiState.update {
                         UiState.Success(
-                            HomeUiState(
-                                name = userDataModel.name
+                            MyUiState(
+                                id = userDataModel.id,
+                                username = userDataModel.username,
+                                name = userDataModel.name,
+                                email = userDataModel.email,
+                                age = userDataModel.age
                             )
                         )
                     }
@@ -57,5 +43,4 @@ class HomeViewModel(
                 }
         }
     }
-
 }
